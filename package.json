@@ -1,0 +1,19 @@
+{
+  "name": "kobservable",
+  "version": "1.0.0",
+  "description": "Observable constructor with KnockoutJS style",
+  "main": "dist/kobservable.js",
+  "typings": "dist/kobservable.d.ts",
+  "scripts": {
+    "build": "tsc -p src && babel dist/kobservable.js --out-file dist/kobservable.js",
+    "test": "babel test > test/bundle.js && ava test/bundle.js"
+  },
+  "author": "Sergio Morchón Poveda",
+  "license": "ISC",
+  "devDependencies": {
+    "ava": "^0.15.2",
+    "babel-cli": "^6.11.4",
+    "babel-preset-es2015": "^6.9.0",
+    "typescript": "^2.1.0-dev.20160720"
+  }
+}
