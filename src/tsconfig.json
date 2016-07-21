@@ -2,7 +2,12 @@
     "compilerOptions": {
         "declaration": true,
         "module": "es6",
-        "outDir": "../dist",
+        "outDir": "../build",
+        "declarationDir": "../dist",
+        "sourceMap": true,
+        "lib": [
+            "es6"
+        ],
         "target": "es6"
     }
 }

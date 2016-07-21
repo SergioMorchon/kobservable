@@ -3,18 +3,27 @@
   "version": "1.0.0",
   "description": "Observable constructor with KnockoutJS style",
   "main": "dist/kobservable.js",
+  "jsnext:main": "dist/kobservable-next.js",
   "typings": "dist/kobservable.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SergioMorchon/kobservable.git"
+  },
   "scripts": {
-    "build": "tsc -p src && babel dist/kobservable.js --out-file dist/kobservable.js",
+    "build": "tsc -p src && rollup -c",
+    "postinstall": "npm run build",
     "pretest": "npm run build",
-    "test": "babel test > test/bundle.js && ava test/bundle.js"
+    "test": "ava",
+    "prepublish": "npm test"
   },
   "author": "Sergio Morchón Poveda",
   "license": "ISC",
   "devDependencies": {
     "ava": "^0.15.2",
-    "babel-cli": "^6.11.4",
-    "babel-preset-es2015": "^6.9.0",
-    "typescript": "^2.1.0-dev.20160720"
+    "babel-preset-es2015-rollup": "^1.1.1",
+    "babelrc-rollup": "^1.1.0",
+    "rollup": "^0.30.0",
+    "rollup-plugin-babel": "^2.5.1",
+    "typescript": "^2.1.0-dev.20160721"
   }
 }
