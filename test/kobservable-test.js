@@ -23,19 +23,27 @@ test('observer can subscribe to an observable', t=> {
     t.is(expectedValue, observedValue);
 });
 
-test('observer receives the current value when subscribes', t=> {
-    const property = observable(true);
-    let observed = false;
-    property.subscribe(value => observed = value);
-    t.true(observed);
-});
-
 test('observer can unsubscribe from an observable', t=> {
     const property = observable(0);
-    let lastValue;
+    let lastValue = ':)';
     const subscription = value => lastValue = value;
     property.subscribe(subscription);
     property.unsubscribe(subscription);
     property('anotherValue');
-    t.is(lastValue, 0);
+    t.is(lastValue, ':)');
+});
+
+test('observable updates when different values are given', t => {
+    const property = observable();
+    let notificationCount = 0;
+    property.subscribe(() => notificationCount++);
+    t.is(0, notificationCount);
+    property(true);
+    t.is(1, notificationCount);
+    property("true");
+    t.is(2, notificationCount);
+    property(NaN);
+    t.is(3, notificationCount);
+    property(NaN);
+    t.is(3, notificationCount, 'NaN twice should not update subscribers');
 });

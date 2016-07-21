@@ -6,6 +6,7 @@
   "typings": "dist/kobservable.d.ts",
   "scripts": {
     "build": "tsc -p src && babel dist/kobservable.js --out-file dist/kobservable.js",
+    "pretest": "npm run build",
     "test": "babel test > test/bundle.js && ava test/bundle.js"
   },
   "author": "Sergio Morchón Poveda",

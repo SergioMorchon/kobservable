@@ -28,6 +28,11 @@ export interface IObservable<T> {
     unsubscribeAll();
 }
 
+const equals = (v1, v2) =>
+    Number.isNaN(v1) && Number.isNaN(v2)
+    ? true
+    : v1 === v2;
+
 /**
  * Creates a new observable instance.
  * @param initialValue The initial value.
@@ -39,7 +44,7 @@ export default function observable<T>(initialValue?: T): IObservable<T> {
 
     const observableContainer = <IObservable<T>>function (value?: T) {
         if (arguments.length) {
-            if (value !== data) {
+            if (!equals(data, value)) {
                 data = value;
                 subscriptions.forEach(subscription => subscription(data));
             }
@@ -51,7 +56,6 @@ export default function observable<T>(initialValue?: T): IObservable<T> {
 
     observableContainer.subscribe = subscription => {
         subscriptions.add(subscription);
-        subscription(data);
     };
     observableContainer.unsubscribe = subscription => {
         subscriptions.delete(subscription);
