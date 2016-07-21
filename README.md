@@ -1,5 +1,7 @@
 # K-Observable
 
+[![Build Status](https://travis-ci.org/SergioMorchon/kobservable.svg?branch=master)](https://travis-ci.org/SergioMorchon/kobservable)
+
 This is a basic observable implementation to hold data and get notified whenever it changes.
 Inspired by the well-known KnockoutJS observable objects, but without any other magic (like bindings or dependency tracking). Just observables and subscriptions.
 

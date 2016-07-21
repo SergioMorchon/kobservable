@@ -11,10 +11,10 @@
   },
   "scripts": {
     "build": "tsc -p src && rollup -c",
-    "postinstall": "npm run build",
     "pretest": "npm run build",
     "test": "ava",
-    "prepublish": "npm test"
+    "prepublish": "npm test",
+    "preversion": "npm run build"
   },
   "author": "Sergio Morchón Poveda",
   "license": "ISC",
