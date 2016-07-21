@@ -6,6 +6,7 @@ let external = Object.keys(pkg.dependencies || {});
 
 export default {
   entry: 'build/kobservable.js',
+  exports: 'named',
   plugins: [babel(babelrc())],
   external: external,
   targets: [
