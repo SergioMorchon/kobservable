@@ -67,3 +67,23 @@ test('computed subscriptions', t => {
     t.is(middleCount, 2);
     t.is(endCount, 1);
 });
+
+
+test('computed notifies only if changes', t => {
+    const source = observable('');
+    let changesCount = 0;
+    const truthy = computed([source], ([value]) => Boolean(value));
+    truthy.subscribe(() => changesCount++);
+
+    t.false(truthy());
+    t.is(changesCount, 0);
+
+    source(false);
+    t.false(truthy());
+    t.is(changesCount, 0);
+
+    source(8);
+    t.is(changesCount, 1);
+    t.true(truthy());
+    t.is(changesCount, 1);
+});

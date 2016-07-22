@@ -7,6 +7,7 @@
     var equals = function equals(v1, v2) {
         return Number.isNaN(v1) && Number.isNaN(v2) ? true : v1 === v2;
     };
+
     /**
      * Creates a new observable instance.
      * @param initialValue The initial value.
@@ -45,15 +46,22 @@
         var attached = false;
         var subscriptions = new Set();
         var updateData = function updateData() {
-            memoizedData = compute(sources.map(function (getter) {
+            var computedData = compute(sources.map(function (getter) {
                 return getter();
             }));
+            ;
+            if (!equals(computedData, memoizedData)) {
+                memoizedData = computedData;
+                return true;
+            }
+            return false;
         };
         var subscription = function subscription() {
-            updateData();
-            subscriptions.forEach(function (subscription) {
-                return subscription(memoizedData);
-            });
+            if (updateData()) {
+                subscriptions.forEach(function (subscription) {
+                    return subscription(memoizedData);
+                });
+            }
         };
         var attach = function attach() {
             sources.forEach(function (source) {

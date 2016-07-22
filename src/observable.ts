@@ -1,4 +1,5 @@
 import {ISubscribable, IObserver} from './subscribable';
+import equals from './equals';
 
 export interface IGetter<T> {
     /**
@@ -20,11 +21,6 @@ export interface IObservable<T> extends
     ISetter<T>,
     ISubscribable<T> {
 }
-
-const equals = (v1, v2) =>
-    Number.isNaN(v1) && Number.isNaN(v2)
-    ? true
-    : v1 === v2;
 
 /**
  * Creates a new observable instance.

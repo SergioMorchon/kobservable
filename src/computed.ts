@@ -1,5 +1,6 @@
 import {ISubscribable, IObserver} from './subscribable';
 import {IGetter} from './observable';
+import equals from './equals';
 
 const empty = {};
 
@@ -13,12 +14,18 @@ export default function computed<T>(sources: (IGetter<any> & ISubscribable<any>)
     const subscriptions = new Set<IObserver<T>>();
 
     const updateData = () => {
-        memoizedData = compute(sources.map(getter => getter()));
+        const computedData = compute(sources.map(getter => getter()));;
+        if (!equals(computedData, memoizedData)) {
+            memoizedData = computedData;
+            return true;
+        }
+        return false;
     };
 
     const subscription = () => {
-        updateData();
-        subscriptions.forEach(subscription => subscription(memoizedData));
+        if (updateData()) {
+            subscriptions.forEach(subscription => subscription(memoizedData));
+        }
     };
 
     const attach = () => {
