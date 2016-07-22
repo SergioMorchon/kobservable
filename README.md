@@ -48,7 +48,7 @@ If your IDE has TypeScript running (with a plugin, see more at https://www.types
 
 ## Compile
 
-`npm install`
+`npm install && npm run build`
 
 ## Test
 
