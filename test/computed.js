@@ -30,16 +30,22 @@ test('computed subscriptions', t => {
     const source = observable(1);
     const incSourceCount = () => sourceCount++;
     source.subscribe(incSourceCount);
+    t.is(source.subscriptionsCount(), 1);
 
     let middleCount = 0;
     const middle = computed([source], ([value]) => value * 2);
     const incMiddleCount = () => middleCount++;
     middle.subscribe(incMiddleCount);
+    t.is(source.subscriptionsCount(), 2);
+    t.is(middle.subscriptionsCount(), 1);
 
     let endCount = 0;
     const end = computed([middle], ([value]) => value + 1);
     const incEndCount = () => endCount++;
     end.subscribe(incEndCount);
+    t.is(source.subscriptionsCount(), 2);
+    t.is(middle.subscriptionsCount(), 2);
+    t.is(end.subscriptionsCount(), 1);
 
     t.is(sourceCount, 0);
     t.is(middleCount, 0);
@@ -59,13 +65,34 @@ test('computed subscriptions', t => {
     t.is(end(), 5);
     t.is(endCount, 1);
 
+    t.is(source.subscriptionsCount(), 2);
+    t.is(middle.subscriptionsCount(), 2);
+    t.is(end.subscriptionsCount(), 1);
+
     end.unsubscribe(incEndCount);
+
+    t.is(source.subscriptionsCount(), 2);
+    t.is(middle.subscriptionsCount(), 1);
+    t.is(end.subscriptionsCount(), 0);
+
     source(3);
 
     t.is(source(), 3);
     t.is(sourceCount, 2);
     t.is(middleCount, 2);
     t.is(endCount, 1);
+
+    source.unsubscribe(incSourceCount);
+
+    t.is(source.subscriptionsCount(), 1);
+    t.is(middle.subscriptionsCount(), 1);
+    t.is(end.subscriptionsCount(), 0);
+
+    middle.unsubscribe(incMiddleCount);
+
+    t.is(source.subscriptionsCount(), 0);
+    t.is(middle.subscriptionsCount(), 0);
+    t.is(end.subscriptionsCount(), 0);
 });
 
 

@@ -17,7 +17,9 @@ test('sets and gets', t => {
 test('observer can subscribe to an observable', t => {
     const property = observable('');
     let observedValue;
+    t.is(property.subscriptionsCount(), 0);
     property.subscribe(value => observedValue = value);
+    t.is(property.subscriptionsCount(), 1);
     const expectedValue = 'wololoooo';
     property(expectedValue);
     t.is(expectedValue, observedValue);
@@ -28,7 +30,9 @@ test('observer can unsubscribe from an observable', t => {
     let lastValue = ':)';
     const subscription = value => lastValue = value;
     property.subscribe(subscription);
+    t.is(property.subscriptionsCount(), 1);
     property.unsubscribe(subscription);
+    t.is(property.subscriptionsCount(), 0);
     property('anotherValue');
     t.is(lastValue, ':)');
 });
