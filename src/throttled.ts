@@ -1,39 +1,47 @@
 import {ISubscribable, IObserver} from './subscribable';
-import observable, {IGetter} from './observable';
-import computed from './computed';
+import {IObservable} from './observable';
+import equals from './equals';
 
-export interface IThrottled<T> extends IGetter<T>, ISubscribable<T> {
-}
+/**
+ * Creates a new observable instance.
+ * @param delay The delay time, in milliseconds.
+ * @param initialValue The initial value.
+ */
+export default function throttled<T>(delay: number, initialValue?: T): IObservable<T> {
 
-export default function throttled<T>(source: IGetter<T> & ISubscribable<T>, delay: number): IThrottled<T> {
     let timeout;
+    let data = initialValue;
+    const subscriptions = new Set<IObserver<T>>();
 
-    const inner = observable(source());
-    const subscription = value => {
+    const updateValue = value => {
         clearTimeout(timeout);
-         timeout = setTimeout(() => {
-             inner(value);
-         }, delay);
+        timeout = setTimeout(() => {
+            data = value;
+        }, delay);
     };
-    source.subscribe(subscription);
 
-    const result = computed<T>([inner], ([innerValue]) => innerValue);
-
-    const innerUnsubscribe = result.unsubscribe;
-    result.unsubscribe = (observer: IObserver<T>) => {
-        innerUnsubscribe(observer);
-        if (!result.subscriptionsCount()) {
-            source.unsubscribe(subscription);
+    const observableContainer = <IObservable<T>>function (value?: T) {
+        if (arguments.length) {
+            if (!equals(data, value)) {
+                updateValue(value);
+            }
+            return this;
+        } else {
+            return data;
         }
     };
 
-    const innerSubscribe = result.subscribe;
-    result.subscribe = (observer: IObserver<T>) => {
-        if (!result.subscriptionsCount()) {
-            source.subscribe(subscription);
-        }
-        innerSubscribe(observer);
+    observableContainer.subscribe = subscription => {
+        subscriptions.add(subscription);
+    };
+    observableContainer.unsubscribe = subscription => {
+        subscriptions.delete(subscription);
+    };
+    observableContainer.unsubscribeAll = () => {
+        subscriptions.clear();
     };
 
-    return result;
+    observableContainer.subscriptionsCount = () => subscriptions.size;
+
+    return observableContainer;
 }
