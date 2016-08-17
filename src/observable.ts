@@ -53,5 +53,7 @@ export default function observable<T>(initialValue?: T): IObservable<T> {
         subscriptions.clear();
     };
 
+    observableContainer.subscriptionsCount = () => subscriptions.size;
+
     return observableContainer;
 }

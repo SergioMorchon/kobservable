@@ -14,7 +14,7 @@ export default function computed<T>(sources: (IGetter<any> & ISubscribable<any>)
     const subscriptions = new Set<IObserver<T>>();
 
     const updateData = () => {
-        const computedData = compute(sources.map(getter => getter()));;
+        const computedData = compute(sources.map(getter => getter()));
         if (!equals(computedData, memoizedData)) {
             memoizedData = computedData;
             return true;
@@ -63,6 +63,7 @@ export default function computed<T>(sources: (IGetter<any> & ISubscribable<any>)
         subscriptions.clear();
         checkSubscriptions();
     };
+    computedContainer.subscriptionsCount = () => subscriptions.size;
 
     return computedContainer;
 }

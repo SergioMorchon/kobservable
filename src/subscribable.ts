@@ -9,6 +9,10 @@ export interface ISubscribable<T> {
      */
     subscribe(observer: IObserver<T>);
     /**
+     * The number of current subscriptions.
+     */
+    subscriptionsCount(): number;
+    /**
      * Unsubscribes an observer.
      * @param observer The observer.
      */
