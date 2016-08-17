@@ -103,7 +103,8 @@ function computed(sources, compute) {
 }
 
 /**
- * Creates a new observable instance.
+ * Creates a new throttled observable instance.
+ * You can set & get the value synchronously, but the observers will be notified with a delay from the last change.
  * @param delay The delay time, in milliseconds.
  * @param initialValue The initial value.
  */
@@ -112,9 +113,12 @@ function throttled(delay, initialValue) {
     var data = initialValue;
     var subscriptions = new Set();
     var updateValue = function updateValue(value) {
+        data = value;
         clearTimeout(timeout);
         timeout = setTimeout(function () {
-            data = value;
+            subscriptions.forEach(function (subscription) {
+                return subscription(data);
+            });
         }, delay);
     };
     var observableContainer = function observableContainer(value) {

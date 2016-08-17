@@ -3,7 +3,8 @@ import {IObservable} from './observable';
 import equals from './equals';
 
 /**
- * Creates a new observable instance.
+ * Creates a new throttled observable instance.
+ * You can set & get the value synchronously, but the observers will be notified with a delay from the last change.
  * @param delay The delay time, in milliseconds.
  * @param initialValue The initial value.
  */
@@ -14,9 +15,10 @@ export default function throttled<T>(delay: number, initialValue?: T): IObservab
     const subscriptions = new Set<IObserver<T>>();
 
     const updateValue = value => {
+        data = value;
         clearTimeout(timeout);
         timeout = setTimeout(() => {
-            data = value;
+            subscriptions.forEach(subscription => subscription(data));
         }, delay);
     };
 

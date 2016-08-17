@@ -15,11 +15,17 @@ test('throttled initial value', async t => {
 
 test('sets and gets throttled', async t => {
     const property = throttled(200, false);
+    let notified = false;
+
+    property.subscribe(() => notified = true);
     property(true);
-    t.false(property());
+    t.true(property());
+    t.false(notified);
+
     await new Promise(resolve => {
         setTimeout(() => {
             t.true(property());
+            t.true(notified);
             resolve();
         }, 300);
     });
